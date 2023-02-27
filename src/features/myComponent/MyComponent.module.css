@@ -1,0 +1,17 @@
+.mainBox {
+    color: Blue;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.mainBox:hover {
+    color: darkgreen;
+}
+
+.btn {
+    background: black;
+    color: black;
+}
