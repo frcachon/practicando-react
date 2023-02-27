@@ -1,0 +1,39 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "id": 2,
+      "title": "aaaaaaa",
+      "author": "hola"
+    },
+    {
+      "id": "5616e1ab-5f55-4aa2-bc5c-5e9883b4e586",
+      "title": "hola",
+      "author": "chau"
+    },
+    {
+      "id": "ba87b705-5f12-43d4-a113-e2397703dfeb",
+      "title": "wefqewgfe",
+      "author": "efwef"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    },
+    {
+      "id": "5a3287c2-5938-447f-adfc-51a7c714e7cb",
+      "title": "12345678",
+      "author": "12345678"
+    }
+  ],
+  "profile": {
+    "token": "typicode"
+  }
+}
