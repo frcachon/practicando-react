@@ -33,7 +33,7 @@ const MyComponent = () => {
                 <Box sx={boxStyle}>
                     <form onSubmit={handleSubmitPost(onSubmitPost)}>
                         <TextField {...registerPost("title")} id="title" label="Title" variant="outlined" sx={{marginRight: "20px"}}/>
-                        <TextField {...registerPost("author")} id="author" label="Author" variant="outlined"sx={{marginRight: "20px"}}/>
+                        <TextField {...registerPost("author")} id="author" label="Author" variant="outlined" sx={{marginRight: "20px"}}/>
                         <Button variant="contained" type="submit">Enviar</Button>
                         <Button variant="contained" onClick={addFields}>Agregar fila</Button>
                     </form>
@@ -82,7 +82,6 @@ const MyComponent = () => {
             }
             try {
                 const response = await axios.post('/posts', request, config)
-                console.log(response)
                 setPosts([...posts, response.data])
                 setMessage("Se cargó correctamente el nuevo posteo")
             } catch (error) {
@@ -135,9 +134,9 @@ const MyComponent = () => {
             </Box>
             <Box>
                 <Typography variant="h2">{title}</Typography>
-                {formFields.array.map((form) => {
+                {formFields.array.map((index) => {
                     return (
-                        <Forms auth={authenticated}></Forms>
+                        <Forms key={formFields.array[index]} auth={authenticated}></Forms>
                     )})
                 }
                 <Typography variant="h5">{message}</Typography>
