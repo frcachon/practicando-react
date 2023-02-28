@@ -1,11 +1,12 @@
-## Getting Started
+## Practicando React
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-### Available Scripts
+### For first execution:
+#### Firstly `npm install`
+#### Secondly `npm start`
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.\
-It simoultaneously runs a fake API using JSON Server in [http://localhost:3004](http://localhost:3004).
+### For later times
+#### Just`npm start`
+It runs both the app (in [http://localhost:3000](http://localhost:3000)) and
+a fake REST API (in [http://localhost:3004](http://localhost:3004)).
