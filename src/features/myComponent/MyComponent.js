@@ -1,5 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Button, TextField, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    FormControl,
+    MenuItem,
+    Select,
+    TextField,
+    Typography
+} from "@mui/material";
 import HolaChau from "../holaChau/HolaChau";
 import styles from "./MyComponent.module.css";
 import Counter from "../counter/Counter.js";
@@ -11,13 +19,17 @@ const MyComponent = () => {
 
     const boxStyle = {
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         marginRight: "300px",
         marginLeft: "300px",
         marginBottom: "20px"
     };
 
+    const types = ["Type 1", "Type 2", "Type 3"];
+
+    const [selectedType, setSelectedType] = useState('');
     const [posts, setPosts] = useState([]);
+    const [containers, setContainers] = useState([]);
     const [authenticated, setAuthenticated] = useState(false);
     const [message, setMessage] = useState("Debe autenticarse");
     const [title, setTitle] = useState("Ingrese su token");
@@ -27,35 +39,61 @@ const MyComponent = () => {
     const {register: registerPost, handleSubmit: handleSubmitPost} = useForm();
     const {register: registerToken, handleSubmit: handleSubmitToken} = useForm();
 
-    function Forms({auth}) {
-        if (auth) {
-            return (
-                <Box sx={boxStyle}>
-                    <form onSubmit={handleSubmitPost(onSubmitPost)}>
-                        <TextField {...registerPost("title")} id="title" label="Title" variant="outlined" sx={{marginRight: "20px"}}/>
-                        <TextField {...registerPost("author")} id="author" label="Author" variant="outlined" sx={{marginRight: "20px"}}/>
-                        <Button variant="contained" type="submit">Enviar</Button>
-                        <Button variant="contained" onClick={addFields}>Agregar fila</Button>
-                    </form>
-                </Box>
-            );
-        }
+
+    function TokenForm() {
         return (
             <Box sx={boxStyle}>
                 <form onSubmit={handleSubmitToken(onSubmitToken)}>
-                    <TextField {...registerToken("token")} id="token" label="Token" variant="outlined" sx={{marginRight: "20px"}}/>
+                    <TextField {...registerToken("token")} required={true} id="token" label="Token" variant="outlined" sx={{marginRight: "20px"}} error={false}/>
                     <Button variant="contained" type="submit">Enviar token</Button>
                 </form>
             </Box>
         );
     }
 
+    function ContainerForm() {
+        return (
+            <form onSubmit={handleSubmitPost(onSubmitContainer)}>
+                {formFields.array.map((line) => {
+                    return (
+                        <Box sx={boxStyle} key={formFields.array[line]} >
+                            <TextField {...registerPost("profit")} id="profit" required={true} label="Profit" variant="outlined" sx={{marginRight: "20px"}} error={false}/>
+                            <TextField {...registerPost("weight")} id="weight" required={true} label="Weight" variant="outlined" sx={{marginRight: "20px"}} error={false}/>
+                            <FormControl>
+                                <Select {...registerPost("type")} id="type" required={true} value={selectedType} label="Type" onChange={handleTypeChange}>
+                                    {types.map((t, index) => {
+                                        return (
+                                            <MenuItem key={index} value={t}>{t}</MenuItem>
+                                        );
+                                    })}
+                                </Select>
+                            </FormControl>
+                            <Button variant="contained" onClick={() => removeField(line)}>Eliminar fila</Button>
+                        </Box>
+                )})}
+                <Button variant="contained" onClick={addField}>Agregar fila</Button>
+                <Button variant="contained" type="submit">Enviar</Button>
+            </form>
+        )
+    }
+
+    const handleTypeChange = (event) => {
+        setSelectedType(event.target.value);
+        console.log(selectedType);
+    };
+
     const handleProp = () => {
 
     };
 
-    const addFields = () => {
+    const addField = () => {
         setFormFields({ count: formFields.count + 1, array: [...formFields.array, formFields.count + 1] });
+    }
+
+    const removeField = (index) => {
+        let data = [...formFields.array];
+        let newData = data.filter((value) => parseInt(value) !== parseInt(index))
+        setFormFields({ count: formFields.count, array: newData })
     }
 
     let config = {
@@ -68,35 +106,34 @@ const MyComponent = () => {
         if (response.statusText === 'OK') {
             localStorage.setItem("token", data.token);
             setAuthenticated(true);
-            setMessage("Autenticado correctamente. Puede postear")
-            setTitle("Crear post")
+            setMessage("Autenticado correctamente. Puede añadir containers")
+            setTitle("Add containers")
         }
     }
 
-    const onSubmitPost = async (data) => {
-        if (data.title !== "" && data.author !== "") {
-            const request = {
-                id: uuid.v4(),
-                title: data.title,
-                author: data.author     // la validacion de que las props coincidan se hace en el backend
+    const onSubmitContainer = async (data) => {
+        const request = {
+            id: uuid.v4(),
+            profit: data.profit,
+            weight: data.weight,     // la validacion de que las props coincidan se hace en el backend
+            type: data.type
+        }
+        try {
+            const response = await axios.post('/containers', request, config)
+            setContainers([...containers, response.data])
+            setMessage("Se cargaron correctamente los nuevos containers")
+        } catch (error) {
+            if (parseInt(error.response.status) === 404) {
+                setMessage("Not Found")
             }
-            try {
-                const response = await axios.post('/posts', request, config)
-                setPosts([...posts, response.data])
-                setMessage("Se cargó correctamente el nuevo posteo")
-            } catch (error) {
-                if (parseInt(error.response.status) === 404) {
-                    setMessage("Not Found")
-                }
-                else if (parseInt(error.response.status) === 403) {
-                    setMessage("Forbidden")
-                }
-                else if (parseInt(error.response.status) === 400) {
-                    setMessage("Bad Request")
-                }
-                else {
-                    setMessage(error.message)
-                }
+            else if (parseInt(error.response.status) === 403) {
+                setMessage("Forbidden")
+            }
+            else if (parseInt(error.response.status) === 400) {
+                setMessage("Bad Request")
+            }
+            else {
+                setMessage(error.message)
             }
         }
     }
@@ -107,8 +144,8 @@ const MyComponent = () => {
                 setPosts(response.data);
             });
         if (localStorage.getItem("token") !== null) {
-            setMessage("Puede postear")
-            setTitle("Crear post")
+            setMessage("Autenticado correctamente. Puede añadir containers")
+            setTitle("Add containers")
             setAuthenticated(true)
         }
 
@@ -134,11 +171,7 @@ const MyComponent = () => {
             </Box>
             <Box>
                 <Typography variant="h2">{title}</Typography>
-                {formFields.array.map((index) => {
-                    return (
-                        <Forms key={formFields.array[index]} auth={authenticated}></Forms>
-                    )})
-                }
+                {authenticated ? <ContainerForm/> : <TokenForm/>}
                 <Typography variant="h5">{message}</Typography>
             </Box>
         </div>

@@ -30,5 +30,13 @@
   ],
   "profile": {
     "token": "typicode"
-  }
+  },
+  "containers": [
+    {
+      "id": "rwg54g4w5g55",
+      "profit": 500,
+      "weight": 100,
+      "type": "type 1"
+    }
+  ]
 }
