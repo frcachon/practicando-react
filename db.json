@@ -38,5 +38,17 @@
       "weight": 100,
       "type": "type 1"
     }
+  ],
+  "users": [
+    {
+      "email": "olivier@mail.com",
+      "password": "$2a$10$opPNWzMVSDKklX9Frtz86umHQ0WTEpQl1O.ALdDdAvokyaQnAAJJa",
+      "id": 1
+    },
+    {
+      "email": "f4fgerge@mail.com",
+      "password": "$2a$10$opPNWzMVSDKklX9Frtz86umHQ0WTEpQl1O.ALdDdAvokyaQnAAJJa",
+      "id": 2
+    }
   ]
 }

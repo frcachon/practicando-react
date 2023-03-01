@@ -101,7 +101,7 @@ const MyComponent = () => {
     }
 
     const onSubmitToken = async (data) => {
-        config['headers'] = {'Authorization': `Basic ${data.token}` };
+        config['headers'] = {'Authorization': `Bearer ${data.token}` };
         const response = await axios.request(config);
         if (response.statusText === 'OK') {
             localStorage.setItem("token", data.token);
@@ -135,6 +135,19 @@ const MyComponent = () => {
             else {
                 setMessage(error.message)
             }
+        }
+    }
+
+    const handleRetrieveToken = async (data) => {
+        const request = {
+            email: "olivier@mail.com",
+            password: "bestPassw0rd"
+        }
+        try {
+            const response = await axios.post('http://localhost:3004/login', request)
+            console.log(response.data)
+        } catch (error) {
+            console.log(error.message)
         }
     }
 
@@ -174,6 +187,7 @@ const MyComponent = () => {
                 {authenticated ? <ContainerForm/> : <TokenForm/>}
                 <Typography variant="h5">{message}</Typography>
             </Box>
+            <Button variant="contained" onClick={handleRetrieveToken}>Retrieve token</Button>
         </div>
     );
 
