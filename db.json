@@ -14,6 +14,11 @@
       "id": "5616e1ab-5f55-4aa2-bc5c-5e9883b4e586",
       "title": "hola",
       "author": "chau"
+    },
+    {
+      "id": "56iuwnfgnwei53g586",
+      "title": "qqqqqq",
+      "author": "wwwwww"
     }
   ],
   "comments": [
@@ -42,13 +47,18 @@
   "users": [
     {
       "email": "olivier@mail.com",
-      "password": "$2a$10$opPNWzMVSDKklX9Frtz86umHQ0WTEpQl1O.ALdDdAvokyaQnAAJJa",
+      "password": "bestPassw0rd",
       "id": 1
     },
     {
       "email": "f4fgerge@mail.com",
-      "password": "$2a$10$opPNWzMVSDKklX9Frtz86umHQ0WTEpQl1O.ALdDdAvokyaQnAAJJa",
+      "password": "ALdDdAvokyaQnAAJJa",
       "id": 2
+    },
+    {
+      "email": "eeeee@mail.com",
+      "password": "$2a$10$jQ72UTE42xWhSlZTxJdjweDlX11lmGdovELyeqyHNhc8shnhf0TKC",
+      "id": 3
     }
   ]
 }

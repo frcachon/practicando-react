@@ -145,7 +145,9 @@ const MyComponent = () => {
         }
         try {
             const response = await axios.post('http://localhost:3004/login', request)
-            console.log(response.data)
+            config['headers'] = {'Authorization': `Bearer ${response.data.accessToken}` };
+            localStorage.setItem("accessToken", response.data.accessToken);
+            // cambiar estados (?
         } catch (error) {
             console.log(error.message)
         }
