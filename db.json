@@ -14,34 +14,38 @@
       "id": "5616e1ab-5f55-4aa2-bc5c-5e9883b4e586",
       "title": "hola",
       "author": "chau"
-    },
-    {
-      "id": "56iuwnfgnwei53g586",
-      "title": "qqqqqq",
-      "author": "wwwwww"
     }
   ],
-  "comments": [
-    {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
-    },
-    {
-      "id": "5a3287c2-5938-447f-adfc-51a7c714e7cb",
-      "title": "12345678",
-      "author": "12345678"
-    }
-  ],
-  "profile": {
-    "token": "typicode"
-  },
   "containers": [
     {
-      "id": "rwg54g4w5g55",
-      "profit": 500,
-      "weight": 100,
-      "type": "type 1"
+      "id": "41171296-e188-4bbd-b168-d937c3ba8c23",
+      "containers": [
+        {
+          "profit": "2",
+          "weight": "2",
+          "type": "type1"
+        },
+        {
+          "profit": "3",
+          "weight": "3",
+          "type": "type2"
+        }
+      ]
+    },
+    {
+      "id": "a6a3cf73-6b1e-43c8-90b5-1ff5ed0477f7",
+      "containers": [
+        {
+          "profit": "1",
+          "weight": "1",
+          "type": "type1"
+        },
+        {
+          "profit": "2",
+          "weight": "2",
+          "type": "type2"
+        }
+      ]
     }
   ],
   "users": [
@@ -59,6 +63,16 @@
       "email": "eeeee@mail.com",
       "password": "$2a$10$jQ72UTE42xWhSlZTxJdjweDlX11lmGdovELyeqyHNhc8shnhf0TKC",
       "id": 3
+    },
+    {
+      "email": "hola@mail.com",
+      "password": "$2a$10$gwv4173SGJjeLcN5hmTyq.hqQTlPRcnMkq4ySBKoMXnoiCG8N9puO",
+      "id": 4
+    },
+    {
+      "email": "coti@coti.com",
+      "password": "$2a$10$MDVb4p1GoXM7eUVJwG1OOeJeXg/sSrG0YNOg5Yfsj7zDc2Mbj2xTy",
+      "id": 5
     }
   ]
 }

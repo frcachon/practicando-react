@@ -22,7 +22,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "concurrently \"react-scripts start\" \"json-server -w db.json -p 3004 -m ./node_modules/json-server-auth -r routes.json\""
+    "start": "concurrently \"react-scripts start\" \"json-server db.json -p 3004 -m ./node_modules/json-server-auth -r routes.json\""
   },
   "eslintConfig": {
     "extends": [
