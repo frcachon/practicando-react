@@ -38,6 +38,10 @@ function ContainerForm() {
             setMessage("Select a plane type.")
             return;
         }
+        if (formFields.length === 0) {
+            setMessage("You must submit containers.")
+            return;
+        }
 
         const request = {
             plane: planeType,
@@ -52,6 +56,7 @@ function ContainerForm() {
             setMessage("Your containers were succesfully submitted.")
             setPlaneType("")
             console.log(response.data)
+            //console.log(response.data.status)
 
         } catch (error) {
             console.log(error.message)
