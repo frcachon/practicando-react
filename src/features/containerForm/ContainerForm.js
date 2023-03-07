@@ -11,31 +11,36 @@ function ContainerForm() {
         { container_type: '', weight: '' },
     ])
 
-    const handleFormChange = (event, index) => {
-        let data = [...formFields];
-        data[index][event.target.name] = event.target.value;
-        setFormFields(data);
-    }
-
     const handlePlaneTypeChange = (event) => {
         setPlaneType(event.target.value);
     };
+
+    const handleContainerTypeChange = (event, index) => {
+        let data = [...formFields];
+        data[index]["container_type"] = event.target.value;
+        setFormFields(data);
+    }
+
+    const handleWeightChange = (event, index) => {
+        let data = [...formFields];
+        data[index]["weight"] = event.target.value;
+        setFormFields(data);
+    }
 
     const submit = async (e) => {
         e.preventDefault();
         const containerTypeIsSelected = formFields.every(item => item.container_type !== "")
         const weightIsValid = formFields.every(item => item.weight > 0)
-        if (!weightIsValid) {
-
-            setMessage("Weight must be positive.")
+        if (planeType === "") {
+            setMessage("Select a plane type.")
             return;
         }
         if (!containerTypeIsSelected) {
-            setMessage("Select a every container type.")
+            setMessage("Select every container type.")
             return;
         }
-        if (planeType === "") {
-            setMessage("Select a plane type.")
+        if (!weightIsValid) {
+            setMessage("Weight must be positive.")
             return;
         }
         if (formFields.length === 0) {
@@ -93,9 +98,9 @@ function ContainerForm() {
                             onChange={handlePlaneTypeChange}
                             variant="outlined"
                         >
-                            <MenuItem value="type1">Plane type 1</MenuItem>
-                            <MenuItem value="type2">Plane type 2</MenuItem>
-                            <MenuItem value="type3">Plane type 3</MenuItem>
+                            <MenuItem value="planetype1">Plane type 1</MenuItem>
+                            <MenuItem value="planetype2">Plane type 2</MenuItem>
+                            <MenuItem value="planetype3">Plane type 3</MenuItem>
                         </Select>
                     </FormControl>
                 </Box>
@@ -110,12 +115,12 @@ function ContainerForm() {
                                         id="container-type-select"
                                         value={form.container_type}
                                         label="Container type"
-                                        onChange={event => handleFormChange(event, index)}
+                                        onChange={event => handleContainerTypeChange(event, index)}
                                         variant="outlined"
                                     >
-                                        <MenuItem value="type1">Container type 1</MenuItem>
-                                        <MenuItem value="type2">Container type 2</MenuItem>
-                                        <MenuItem value="type3">Container type 3</MenuItem>
+                                        <MenuItem value="containertype1">Container type 1</MenuItem>
+                                        <MenuItem value="containertype2">Container type 2</MenuItem>
+                                        <MenuItem value="containertype3">Container type 3</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Box>
@@ -123,7 +128,7 @@ function ContainerForm() {
                                 <TextField
                                     name='weight'
                                     placeholder='Weight'
-                                    onChange={event => handleFormChange(event, index)}
+                                    onChange={event => handleWeightChange(event, index)}
                                     value={form.weight}
                                     type='number'
                                     min="1"
@@ -132,19 +137,22 @@ function ContainerForm() {
                                 />
                             </Box>
                             <Box sx={ {flexGrow: "1"} } >
-                                <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={() => removeFields(index)}>Remove row</Button>
+                                <Button sx={{height: "100%", width: "100%"}} variant="contained"
+                                        onClick={() => removeFields(index)}>Remove row</Button>
                             </Box>
                         </Box>
                     )
                 })}
             </form>
-            {(message !== "") ? <Box component="span" sx={{ display: 'block', paddingTop: "10px", paddingBottom: "20px" }}>{message}</Box> : <Box/>}
+            {(message !== "") ? <Box component="span" sx={{ display: 'block', paddingTop: "10px", paddingBottom: "20px" }}>
+                {message}</Box> : <Box/>}
 
             <Box sx={{display: "flex", flexDirection: "row", height: "60px"}}>
-                <Box sx={{flexGrow: "12"}}/>
+
                 <Box sx={{flexGrow: "1", paddingRight: "10px"}}>
                     <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={addFields}>Add row</Button>
                 </Box>
+                <Box sx={{flexGrow: "7"}}/>
                 <Box sx={{flexGrow: "1"}}>
                     <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={submit}>Submit</Button>
                 </Box>

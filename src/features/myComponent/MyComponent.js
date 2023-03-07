@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-    Box,
-    Button,
-    TextField,
-    Typography
-} from "@mui/material";
-import Hola from "../hola/Hola";
+import {Box, Button, TextField, Typography} from "@mui/material";
 import styles from "./MyComponent.module.css";
 import Counter from "../counter/Counter.js";
 import axios from "axios";
@@ -16,8 +10,8 @@ const MyComponent = () => {
 
     const [containers, setContainers] = useState([]);
     const [authenticated, setAuthenticated] = useState(false);
-    const [message, setMessage] = useState("You must be authenticated.");
     const [title, setTitle] = useState("Log in");
+    const [message, setMessage] = useState("You must be authenticated.");
     const {register: registerToken, handleSubmit: handleSubmitToken} = useForm();
 
     let config = {
@@ -55,16 +49,12 @@ const MyComponent = () => {
             localStorage.setItem("accessToken", response.data.accessToken);
             console.log(response.data.accessToken);
             setAuthenticated(true);
-            setMessage("Successfully authenticated. You are now able to add containers")
-            setTitle("Add containers")
+            setTitle("Weight and balance")
+            setMessage("Successfully authenticated.")
         } catch (error) {
             console.log(error.message)
         }
     }
-
-    const handleProp = () => {
-        console.log("hola")
-    };
 
     useEffect(() => {
         axios.get('/containers', config)
@@ -72,8 +62,8 @@ const MyComponent = () => {
                 setContainers(response.data)
             });
         if (localStorage.getItem("accessToken") !== null) {
-            setMessage("Successfully authenticated. You are now able to add containers")
-            setTitle("Add containers")
+            setTitle("Weight and balance")
+            setMessage("Successfully authenticated.")
             setAuthenticated(true)
         }
 
@@ -82,7 +72,6 @@ const MyComponent = () => {
     return (
         <Box className={styles.mainBox}>
             <Typography variant="h2" >React-training app</Typography>
-            <Hola myprop={handleProp}/>
             <Counter/>
             <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", paddingTop: "10px", paddingBottom: "10px"}}>
                 {containers.map((c) => {

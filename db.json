@@ -1,37 +1,6 @@
 {
   "containers": [
-    {
-      "plane": 1,
-      "containers": [
-        {
-          "container_type": "type2",
-          "weight": "1"
-        },
-        {
-          "container_type": "type2",
-          "weight": "1"
-        }
-      ],
-      "id": "YMUZirw"
-    },
-    {
-      "plane": 1,
-      "containers": [
-        {
-          "container_type": "type1",
-          "weight": "3"
-        },
-        {
-          "container_type": "type2",
-          "weight": "1"
-        },
-        {
-          "container_type": "type3",
-          "weight": "1"
-        }
-      ],
-      "id": "dToTIra"
-    }
+
   ],
   "users": [
     {
