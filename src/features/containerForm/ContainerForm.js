@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import axios from 'axios';
-import * as uuid from "uuid";
+import {Box} from "@mui/material";
+import styles from './ContainerForm.module.css';
 
 function ContainerForm() {
 
+    const [planeType, setPlaneType] = useState('');
     const [message, setMessage] = useState('');
     const [formFields, setFormFields] = useState([
-        { profit: '', weight: '', type: ''},
+        { container_type: '', weight: '' },
     ])
 
     const handleFormChange = (event, index) => {
@@ -15,31 +17,41 @@ function ContainerForm() {
         setFormFields(data);
     }
 
+    const handlePlaneTypeChange = (event) => {
+        setPlaneType(event.target.value);
+    };
+
     const submit = async (e) => {
         e.preventDefault();
-        const profitIsValid = formFields.every(item => item.profit > 0)
+        const containerTypeIsSelected = formFields.every(item => item.container_type !== "")
         const weightIsValid = formFields.every(item => item.weight > 0)
-        const typeIsSelected = formFields.every(item => item.type !== "")
-        if (!weightIsValid || !profitIsValid) {
-            setMessage("Verifique que los campos profit y weight siempre sean mayores a cero.")
+        if (!weightIsValid) {
+
+            setMessage("Weight must be positive.")
             return;
         }
-        if (!typeIsSelected) {
-            setMessage("Seleccione tipo.")
+        if (!containerTypeIsSelected) {
+            setMessage("Select a every container type.")
+            return;
+        }
+        if (planeType === "") {
+            setMessage("Select a plane type.")
             return;
         }
 
         const request = {
-            id: uuid.v4(),
+            plane: planeType,
             containers: formFields
         }
 
         try {
             const response = await axios.post('http://localhost:3004/containers', request)
             setFormFields([
-                { profit: '', weight: '', type: ''},
+                { container_type: '', weight: '' },
             ])
-            console.log(response.status)
+            setMessage("Your containers were succesfully submitted.")
+            setPlaneType("")
+            console.log(response.data)
 
         } catch (error) {
             console.log(error.message)
@@ -48,11 +60,10 @@ function ContainerForm() {
 
     const addFields = () => {
         let object = {
-            profit: '',
-            weight: '',
-            type: ''
+            container_type: '',
+            weight: ''
         }
-
+        setMessage("")
         setFormFields([...formFields, object])
     }
 
@@ -60,23 +71,29 @@ function ContainerForm() {
         let data = [...formFields];
         data.splice(index, 1)
         setFormFields(data)
+        setMessage("")
     }
 
     return (
-        <div className="App">
-            <form onSubmit={submit}>
+        <Box className={styles.formBox}>
+            <form>
+                <select id="plane-type" value={planeType} onChange={handlePlaneTypeChange}>
+                    <option value="" disabled selected>Select your option</option>
+                    <option value="type1">Type 1</option>
+                    <option value="type2">Type 2</option>
+                    <option value="type3">Type 3</option>
+                </select>
                 {formFields.map((form, index) => {
                     return (
                         <div key={index}>
-                            <span>Agrague containers</span>
-                            <input
-                                name='profit'
-                                placeholder='Profit'
-                                onChange={event => handleFormChange(event, index)}
-                                value={form.profit}
-                                type='number'
-                                min="1"
-                            />
+                            <select name='container_type'
+                                    onChange={event => handleFormChange(event, index)}
+                                    value={form.container_type}>
+                                <option value="" disabled selected>Select your option</option>
+                                <option value="type1">Type 1</option>
+                                <option value="type2">Type 2</option>
+                                <option value="type3">Type 3</option>
+                            </select>
                             <input
                                 name='weight'
                                 placeholder='Weight'
@@ -85,24 +102,16 @@ function ContainerForm() {
                                 type='number'
                                 min="1"
                             />
-                            <select name='type'
-                                    onChange={event => handleFormChange(event, index)}
-                                    value={form.type}>
-                                <option></option>
-                                <option value="type1">Type 1</option>
-                                <option value="type2">Type 2</option>
-                                <option value="type3">Type 3</option>
-                            </select>
-                            <button onClick={() => removeFields(index)}>Remove</button>
+                            <button onClick={() => removeFields(index)}>Remove row</button>
                         </div>
                     )
                 })}
             </form>
             <span>{message}</span>
-            <button onClick={addFields}>Add More..</button>
+            <button onClick={addFields}>Add row</button>
             <br />
             <button onClick={submit}>Submit</button>
-        </div>
+        </Box>
     );
 }
 

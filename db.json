@@ -1,69 +1,39 @@
 {
-  "posts": [
-    {
-      "id": 1,
-      "title": "json-server",
-      "author": "typicode"
-    },
-    {
-      "id": 2,
-      "title": "aaaaaaa",
-      "author": "hola"
-    },
-    {
-      "id": "5616e1ab-5f55-4aa2-bc5c-5e9883b4e586",
-      "title": "hola",
-      "author": "chau"
-    }
-  ],
   "containers": [
     {
-      "id": "41171296-e188-4bbd-b168-d937c3ba8c23",
+      "plane": 1,
       "containers": [
         {
-          "profit": "2",
-          "weight": "2",
-          "type": "type1"
+          "container_type": "type2",
+          "weight": "1"
         },
         {
-          "profit": "3",
-          "weight": "3",
-          "type": "type2"
+          "container_type": "type2",
+          "weight": "1"
         }
-      ]
+      ],
+      "id": "YMUZirw"
     },
     {
-      "id": "a6a3cf73-6b1e-43c8-90b5-1ff5ed0477f7",
+      "plane": 1,
       "containers": [
         {
-          "profit": "1",
-          "weight": "1",
-          "type": "type1"
+          "container_type": "type1",
+          "weight": "3"
         },
         {
-          "profit": "2",
-          "weight": "2",
-          "type": "type2"
+          "container_type": "type2",
+          "weight": "1"
+        },
+        {
+          "container_type": "type3",
+          "weight": "1"
         }
-      ]
+      ],
+      "id": "dToTIra"
     }
   ],
   "users": [
-    {
-      "email": "olivier@mail.com",
-      "password": "bestPassw0rd",
-      "id": 1
-    },
-    {
-      "email": "f4fgerge@mail.com",
-      "password": "ALdDdAvokyaQnAAJJa",
-      "id": 2
-    },
-    {
-      "email": "eeeee@mail.com",
-      "password": "$2a$10$jQ72UTE42xWhSlZTxJdjweDlX11lmGdovELyeqyHNhc8shnhf0TKC",
-      "id": 3
-    },
     {
       "email": "hola@mail.com",
       "password": "$2a$10$gwv4173SGJjeLcN5hmTyq.hqQTlPRcnMkq4ySBKoMXnoiCG8N9puO",

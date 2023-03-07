@@ -53,9 +53,9 @@ const MyComponent = () => {
             config['headers'] = {'Authorization': `Bearer ${response.data.accessToken}` };
             localStorage.setItem("accessToken", response.data.accessToken);
             console.log(response.data.accessToken);
-            //         setAuthenticated(true);
-            //         setMessage("Autenticado correctamente. Puede añadir containers")
-            //         setTitle("Add containers")
+            setAuthenticated(true);
+            setMessage("Autenticado correctamente. Puede añadir containers")
+            setTitle("Add containers")
         } catch (error) {
             console.log(error.message)
         }
@@ -68,9 +68,9 @@ const MyComponent = () => {
     useEffect(() => {
         axios.get('/containers', config)
             .then((response) => {
-                setContainers(response.data);
+                setContainers(response.data)
             });
-        if (localStorage.getItem("token") !== null) {
+        if (localStorage.getItem("accessToken") !== null) {
             setMessage("Autenticado correctamente. Puede añadir containers")
             setTitle("Add containers")
             setAuthenticated(true)
