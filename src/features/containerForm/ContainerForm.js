@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import {Box} from "@mui/material";
+import {Box, Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
 import styles from './ContainerForm.module.css';
 
 function ContainerForm() {
@@ -80,42 +80,76 @@ function ContainerForm() {
     }
 
     return (
-        <Box className={styles.formBox}>
+        <Box>
             <form>
-                <select id="plane-type" value={planeType} onChange={handlePlaneTypeChange}>
-                    <option value="" disabled selected>Select your option</option>
-                    <option value="type1">Type 1</option>
-                    <option value="type2">Type 2</option>
-                    <option value="type3">Type 3</option>
-                </select>
+                <Box sx={ {paddingBottom: "10px"} }>
+                    <FormControl sx={{height: "100%", width: "100%"}}>
+                        <InputLabel id="plane-type-label">Plane type</InputLabel>
+                        <Select
+                            labelId="plane-type-label"
+                            id="plane-type-select"
+                            value={planeType}
+                            label="Plane type"
+                            onChange={handlePlaneTypeChange}
+                            variant="outlined"
+                        >
+                            <MenuItem value="type1">Plane type 1</MenuItem>
+                            <MenuItem value="type2">Plane type 2</MenuItem>
+                            <MenuItem value="type3">Plane type 3</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
                 {formFields.map((form, index) => {
                     return (
-                        <div key={index}>
-                            <select name='container_type'
+                        <Box className={styles.formBox} key={index}>
+                            <Box sx={ {flexGrow: "12", paddingRight: "10px"} }>
+                                <FormControl sx={{height: "100%", width: "100%"}}>
+                                    <InputLabel id="container-type-label">Container type</InputLabel>
+                                    <Select
+                                        labelId="container-type-label"
+                                        id="container-type-select"
+                                        value={form.container_type}
+                                        label="Container type"
+                                        onChange={event => handleFormChange(event, index)}
+                                        variant="outlined"
+                                    >
+                                        <MenuItem value="type1">Container type 1</MenuItem>
+                                        <MenuItem value="type2">Container type 2</MenuItem>
+                                        <MenuItem value="type3">Container type 3</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <Box sx={ {flexGrow: "6", paddingRight: "10px"} }>
+                                <TextField
+                                    name='weight'
+                                    placeholder='Weight'
                                     onChange={event => handleFormChange(event, index)}
-                                    value={form.container_type}>
-                                <option value="" disabled selected>Select your option</option>
-                                <option value="type1">Type 1</option>
-                                <option value="type2">Type 2</option>
-                                <option value="type3">Type 3</option>
-                            </select>
-                            <input
-                                name='weight'
-                                placeholder='Weight'
-                                onChange={event => handleFormChange(event, index)}
-                                value={form.weight}
-                                type='number'
-                                min="1"
-                            />
-                            <button onClick={() => removeFields(index)}>Remove row</button>
-                        </div>
+                                    value={form.weight}
+                                    type='number'
+                                    min="1"
+                                    sx={{height: "100%", width: "100%"}}
+                                    variant="outlined"
+                                />
+                            </Box>
+                            <Box sx={ {flexGrow: "1"} } >
+                                <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={() => removeFields(index)}>Remove row</Button>
+                            </Box>
+                        </Box>
                     )
                 })}
             </form>
-            <span>{message}</span>
-            <button onClick={addFields}>Add row</button>
-            <br />
-            <button onClick={submit}>Submit</button>
+            {(message !== "") ? <Box component="span" sx={{ display: 'block', paddingTop: "10px", paddingBottom: "20px" }}>{message}</Box> : <Box/>}
+
+            <Box sx={{display: "flex", flexDirection: "row", height: "60px"}}>
+                <Box sx={{flexGrow: "12"}}/>
+                <Box sx={{flexGrow: "1", paddingRight: "10px"}}>
+                    <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={addFields}>Add row</Button>
+                </Box>
+                <Box sx={{flexGrow: "1"}}>
+                    <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={submit}>Submit</Button>
+                </Box>
+            </Box>
+
         </Box>
     );
 }

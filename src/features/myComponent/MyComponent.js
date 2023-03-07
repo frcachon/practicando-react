@@ -5,7 +5,7 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import HolaChau from "../holaChau/HolaChau";
+import Hola from "../hola/Hola";
 import styles from "./MyComponent.module.css";
 import Counter from "../counter/Counter.js";
 import axios from "axios";
@@ -14,18 +14,10 @@ import ContainerForm from "../containerForm/ContainerForm";
 
 const MyComponent = () => {
 
-    const boxStyle = {
-        display: "flex",
-        flexDirection: "row",
-        marginRight: "300px",
-        marginLeft: "300px",
-        marginBottom: "20px"
-    };
-
     const [containers, setContainers] = useState([]);
     const [authenticated, setAuthenticated] = useState(false);
-    const [message, setMessage] = useState("Debe autenticarse");
-    const [title, setTitle] = useState("Ingrese su token");
+    const [message, setMessage] = useState("You must be authenticated.");
+    const [title, setTitle] = useState("Log in");
     const {register: registerToken, handleSubmit: handleSubmitToken} = useForm();
 
     let config = {
@@ -34,11 +26,20 @@ const MyComponent = () => {
 
     function TokenForm() {
         return (
-            <Box sx={boxStyle}>
+            <Box>
                 <form onSubmit={handleSubmitToken(handleRetrieveToken)}>
-                    <TextField {...registerToken("token", {required: 'true'})} id="token" label="Token" variant="outlined" sx={{marginRight: "20px"}} error={false}/>
-                    <Button variant="contained" type="submit">Enviar token</Button>
+                    <Box sx={{display: "flex", flexDirection: "row", maxHeight: "60px"}}>
+                        <Box sx={{flexGrow: "4", paddingRight: "10px"}}>
+                            <TextField {...registerToken("token", {required: 'true'})} id="token" label="Token"
+                                       variant="outlined" sx={{marginRight: "10px", height: "100%", width: "100%"}}
+                                       error={false}/>
+                        </Box>
+                        <Box sx={{flexGrow: "1"}}>
+                            <Button variant="contained" type="submit" sx={{height: "100%", width: "100%"}}>Submit token</Button>
+                        </Box>
+                    </Box>
                 </form>
+                <Typography component="span" sx={{ display: 'block', paddingTop: "10px"}}>{message}</Typography>
             </Box>
         );
     }
@@ -54,7 +55,7 @@ const MyComponent = () => {
             localStorage.setItem("accessToken", response.data.accessToken);
             console.log(response.data.accessToken);
             setAuthenticated(true);
-            setMessage("Autenticado correctamente. Puede añadir containers")
+            setMessage("Successfully authenticated. You are now able to add containers")
             setTitle("Add containers")
         } catch (error) {
             console.log(error.message)
@@ -71,7 +72,7 @@ const MyComponent = () => {
                 setContainers(response.data)
             });
         if (localStorage.getItem("accessToken") !== null) {
-            setMessage("Autenticado correctamente. Puede añadir containers")
+            setMessage("Successfully authenticated. You are now able to add containers")
             setTitle("Add containers")
             setAuthenticated(true)
         }
@@ -79,27 +80,24 @@ const MyComponent = () => {
     }, []);
 
     return (
-        <div>
-            <Box className={styles.mainBox}>
-                <Typography variant="h2" >React-training app</Typography>
-                <HolaChau myprop={handleProp}/>
-                <Counter/>
-                <Box sx={{display: "flex", flexDirection: "column", width: "100%", height: "40vh", justifyContent: "center", alignItems: "center"}}>
-                    {containers.map((c) => {
-                        return (
-                            <Box key={c.id} sx={{display: "flex", flexDirection: "row", marginBottom: "30px"}}>
-                                <Typography sx={{marginRight: "20px"}} variant={"h5"}>{c.id}</Typography>
-                            </Box>
-                        );
-                    })}
-                </Box>
+        <Box className={styles.mainBox}>
+            <Typography variant="h2" >React-training app</Typography>
+            <Hola myprop={handleProp}/>
+            <Counter/>
+            <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", paddingTop: "10px", paddingBottom: "10px"}}>
+                {containers.map((c) => {
+                    return (
+                        <Box key={c.id} sx={{display: "flex", flexDirection: "row", marginBottom: "10px"}}>
+                            <Typography variant="h5">{c.id}</Typography>
+                        </Box>
+                    );
+                })}
             </Box>
             <Box>
-                <Typography variant="h2">{title}</Typography>
-                {authenticated ? <ContainerForm/> : <TokenForm/>}
-                <Typography variant="h5">{message}</Typography>
+                <Typography variant="h3" sx={{paddingBottom: "10px"}}>{title}</Typography>
+                {authenticated ? (<ContainerForm/>) : <TokenForm/>}
             </Box>
-        </div>
+        </Box>
     );
 
 }

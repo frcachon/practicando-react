@@ -1,3 +1,6 @@
 .formBox {
-
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 10px;
+    max-height: 60px;
 }
