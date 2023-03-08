@@ -1,6 +1,27 @@
 {
   "containers": [
-
+    {
+      "plane": "planetype2",
+      "containers": [
+        {
+          "container_type": "containertype3",
+          "weight": "2"
+        },
+        {
+          "container_type": "containertype3",
+          "weight": "5"
+        },
+        {
+          "container_type": "containertype2",
+          "weight": "2"
+        },
+        {
+          "container_type": "containertype1",
+          "weight": "1"
+        }
+      ],
+      "id": 1
+    }
   ],
   "users": [
     {

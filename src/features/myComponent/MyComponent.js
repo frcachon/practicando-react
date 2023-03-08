@@ -4,6 +4,7 @@ import styles from "./MyComponent.module.css";
 import Counter from "../counter/Counter.js";
 import axios from "axios";
 import {useForm} from "react-hook-form";
+import {useQuery} from "react-query";
 import ContainerForm from "../containerForm/ContainerForm";
 
 const MyComponent = () => {
@@ -45,7 +46,7 @@ const MyComponent = () => {
         }
         try {
             const response = await axios.post('http://localhost:3004/login', request)
-            config['headers'] = {'Authorization': `Bearer ${response.data.accessToken}` };
+            config['headers'] = {'Authorization': `Bearer ${response.data.accessToken}` }; // according to docs: "Bearer ..." -> "Token ..."
             localStorage.setItem("accessToken", response.data.accessToken);
             console.log(response.data.accessToken);
             setAuthenticated(true);
@@ -53,6 +54,30 @@ const MyComponent = () => {
             setMessage("Successfully authenticated.")
         } catch (error) {
             console.log(error.message)
+        }
+    }
+
+    const useGetUsers = () => {
+        return useQuery('users',
+            () => axios.get('/containers', config).then(res => console.log(res.data)),
+            {
+                refetchInterval: 500,
+                refetchIntervalInBackground: false // default to true
+            });
+    }
+
+    function Users() {
+        const {isLoading, data} = useGetUsers()
+        if (isLoading) {
+            return (
+                <Typography>Loading...</Typography>
+            );
+        } else {
+            return (
+                <Box>
+                    <Typography>Fetched data</Typography>
+                </Box>
+            );
         }
     }
 
@@ -86,6 +111,7 @@ const MyComponent = () => {
                 <Typography variant="h3" sx={{paddingBottom: "10px"}}>{title}</Typography>
                 {authenticated ? (<ContainerForm/>) : <TokenForm/>}
             </Box>
+            <Users/>
         </Box>
     );
 
