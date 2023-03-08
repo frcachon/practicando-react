@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Box, Button, TextField, Typography} from "@mui/material";
 import styles from "./MyComponent.module.css";
-import Counter from "../counter/Counter.js";
 import axios from "axios";
 import {useForm} from "react-hook-form";
-import {useQuery} from "react-query";
 import ContainerForm from "../containerForm/ContainerForm";
 
 const MyComponent = () => {
@@ -12,7 +10,7 @@ const MyComponent = () => {
     const [containers, setContainers] = useState([]);
     const [authenticated, setAuthenticated] = useState(false);
     const [title, setTitle] = useState("Log in");
-    const [message, setMessage] = useState("You must be authenticated.");
+    const [message, setMessage] = useState("Please insert the token you were given.");
     const {register: registerToken, handleSubmit: handleSubmitToken} = useForm();
 
     let config = {
@@ -24,7 +22,7 @@ const MyComponent = () => {
             <Box>
                 <form onSubmit={handleSubmitToken(handleRetrieveToken)}>
                     <Box sx={{display: "flex", flexDirection: "row", maxHeight: "60px"}}>
-                        <Box sx={{flexGrow: "4", paddingRight: "10px"}}>
+                        <Box sx={{flexGrow: "10", paddingRight: "10px"}}>
                             <TextField {...registerToken("token", {required: 'true'})} id="token" label="Token"
                                        variant="outlined" sx={{marginRight: "10px", height: "100%", width: "100%"}}
                                        error={false}/>
@@ -54,30 +52,7 @@ const MyComponent = () => {
             setMessage("Successfully authenticated.")
         } catch (error) {
             console.log(error.message)
-        }
-    }
-
-    const useGetUsers = () => {
-        return useQuery('users',
-            () => axios.get('/containers', config).then(res => console.log(res.data)),
-            {
-                refetchInterval: 500,
-                refetchIntervalInBackground: false // default to true
-            });
-    }
-
-    function Users() {
-        const {isLoading, data} = useGetUsers()
-        if (isLoading) {
-            return (
-                <Typography>Loading...</Typography>
-            );
-        } else {
-            return (
-                <Box>
-                    <Typography>Fetched data</Typography>
-                </Box>
-            );
+            setMessage("Invalid token.")
         }
     }
 
@@ -96,22 +71,8 @@ const MyComponent = () => {
 
     return (
         <Box className={styles.mainBox}>
-            <Typography variant="h2" >React-training app</Typography>
-            <Counter/>
-            <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", paddingTop: "10px", paddingBottom: "10px"}}>
-                {containers.map((c) => {
-                    return (
-                        <Box key={c.id} sx={{display: "flex", flexDirection: "row", marginBottom: "10px"}}>
-                            <Typography variant="h5">{c.id}</Typography>
-                        </Box>
-                    );
-                })}
-            </Box>
-            <Box>
-                <Typography variant="h3" sx={{paddingBottom: "10px"}}>{title}</Typography>
-                {authenticated ? (<ContainerForm/>) : <TokenForm/>}
-            </Box>
-            <Users/>
+            <Typography variant="h4" sx={{paddingBottom: "10px"}}>{title}</Typography>
+            {authenticated ? (<ContainerForm/>) : <TokenForm/>}
         </Box>
     );
 

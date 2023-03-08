@@ -21,6 +21,34 @@
         }
       ],
       "id": 1
+    },
+    {
+      "plane": "planetype2",
+      "containers": [
+        {
+          "container_type": "containertype2",
+          "weight": "5"
+        },
+        {
+          "container_type": "containertype2",
+          "weight": "3"
+        }
+      ],
+      "id": 2
+    },
+    {
+      "plane": "planetype1",
+      "containers": [
+        {
+          "container_type": "containertype2",
+          "weight": "2"
+        },
+        {
+          "container_type": "containertype2",
+          "weight": "4"
+        }
+      ],
+      "id": 3
     }
   ],
   "users": [

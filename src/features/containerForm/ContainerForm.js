@@ -149,7 +149,7 @@ function ContainerForm() {
 
             <Box sx={{display: "flex", flexDirection: "row", height: "60px"}}>
 
-                <Box sx={{flexGrow: "1", paddingRight: "10px"}}>
+                <Box sx={{flexGrow: "1", paddingRight: "20px"}}>
                     <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={addFields}>Add row</Button>
                 </Box>
                 <Box sx={{flexGrow: "7"}}/>
