@@ -7,10 +7,9 @@ import ContainerForm from "../containerForm/ContainerForm";
 
 const MyComponent = () => {
 
-    const [containers, setContainers] = useState([]);
     const [authenticated, setAuthenticated] = useState(false);
-    const [title, setTitle] = useState("Log in");
-    const [message, setMessage] = useState("Please insert the token you were given.");
+    const [title, setTitle] = useState("");
+    const [message, setMessage] = useState("");
     const {register: registerToken, handleSubmit: handleSubmitToken} = useForm();
 
     let config = {
@@ -57,22 +56,22 @@ const MyComponent = () => {
     }
 
     useEffect(() => {
-        axios.get('/containers', config)
-            .then((response) => {
-                setContainers(response.data)
-            });
-        if (localStorage.getItem("accessToken") !== null) {
+        if (localStorage.getItem("accessToken") === null) {
+            setTitle("Log in")
+            setMessage("Please insert the token you were given.")
+            setAuthenticated(false)
+        }
+        else {
             setTitle("Weight and balance")
             setMessage("Successfully authenticated.")
             setAuthenticated(true)
         }
-
     }, []);
 
     return (
         <Box className={styles.mainBox}>
             <Typography variant="h4" sx={{paddingBottom: "10px"}}>{title}</Typography>
-            {authenticated ? (<ContainerForm/>) : <TokenForm/>}
+            {authenticated ? <ContainerForm/> : <TokenForm/>}
         </Box>
     );
 

@@ -5,11 +5,17 @@ import styles from './ContainerForm.module.css';
 
 function ContainerForm() {
 
+    //const [containers, setContainers] = useState([]);
     const [planeType, setPlaneType] = useState('');
     const [message, setMessage] = useState('');
     const [formFields, setFormFields] = useState([
         { container_type: '', weight: '' },
     ])
+
+    // axios.get('/containers', config)
+    //     .then((response) => {
+    //         setContainers(response.data)
+    //     });
 
     const handlePlaneTypeChange = (event) => {
         setPlaneType(event.target.value);
