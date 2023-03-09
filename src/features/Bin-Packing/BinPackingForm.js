@@ -22,15 +22,44 @@ function BinPackingForm() {
 
         const configIsValid = containerFields.every(item => item.config !== '' &&  item.config > 0)
         const priorityIsValid= abwsFields.every(item => item.priority !== '' && Number(item.priority) > 0)
-        const awbNumberIsValid= abwsFields.every(item=> item.awb_number!== '' && Number(item.awb_number) > 0) //tiene q ser unico
-        const isBulkContainer = containerFields.some(item => item.container_type === 'BULK');
+        const awbNumberIsValid= abwsFields.every(item=> item.awb_number!== '' && Number(item.awb_number) > 0)
+        const uldIdentifiersValid = abwsFields.every(item => {
+            if (item.type === 'BULK' || item.type === 'BUP' || item.uld_identifiers === '') { // should not be passed es que se pasa todo como null?
+                return item.uld_identifiers == '';
+            }});
+        const dimensionsValid = abwsFields.every(item => {
+            if (item.type === 'BUP' || item.type === 'SSPD') {
+                return item.dimensions == '';
+            }});
+        const weightIsValid = abwsFields.every(item => item.weight !== '' && typeof Number(item.weight) === 'number' && Number(item.weight) > 0)
+        const volumeIsValid = abwsFields.every(item => item.volume !== '' && typeof Number(item.volume) === 'number' && Number(item.volume) > 0)
 
-        //falta ahcer los chekeos de datos
-        //uld_identifiers-If the type is  SSPD, this parameter must be sent. If the type is BULK, BUP or null, it should NOT be passed.
-        //dimensions-If the type is BULK or null, this parameter must be sent. If the type is BUP or SSPD, it should NOT be passed.
+        const awbNumbers = abwsFields.map(item => item.awb_number);
+        if (awbNumbers.length !== [...new Set(awbNumbers)].length) {//tiene q ser unico probar si eso funciona
+            setMessage("Awb number must be unique.");
+            return;
+        }
+
+        //Me falta ver las que los campos pueden ser mandados sin nada
 
         if (!configIsValid) {
             setMessage("Weight must be positive.")
+            return;
+        }
+        if (!weightIsValid) {
+            setMessage("Weight must be a positive number.")
+            return;
+        }
+        if (!volumeIsValid) {
+            setMessage("Volume must be a positive number.")
+            return;
+        }
+        if (!awbNumberIsValid) {
+            setMessage("Awb number must be a positive number.")
+            return;
+        }
+        if (!priorityIsValid) {
+            setMessage("Priority must be a positive number.")
             return;
         }
         if (containerFields.length === 0) {
@@ -39,6 +68,14 @@ function BinPackingForm() {
         }
         if (abwsFields.length === 0) {
             setMessage("You must submit abws.")
+            return;
+        }
+        if (uldIdentifiersValid) {
+            setMessage("Uld Identifiers are required for SSPD type only.");
+            return;
+        }
+        if (dimensionsValid) {
+            setMessage("Dimensions are required for BULK or null type only.");
             return;
         }
 
@@ -117,114 +154,113 @@ function BinPackingForm() {
     }
 
     return (
-            <Box>
-                <form>
-                    <Box component="form" sx={{'& > :not(style)': {m: 1, width: '25ch'},}}
-                         noValidate
-                         autoComplete="off"
-                    >
-                        <TextField id="flight-weight-capacity" label="Flight-Weight-Capacity" variant="standard"/>
-                    </Box>
-                    {containerFields.map((form, index) => {
-                        return (
-                            <Box className={styles.formBox} key={index}>
-                                <Box sx={{flexGrow: "12", paddingRight: "10px"}}>
-                                    <FormControl sx={{height: "100%", width: "100%"}}>
-                                        <InputLabel id="container-type">Container type</InputLabel>
-                                        <Select
-                                            labelId="container-type-label"
-                                            id="container-type-select"
-                                            value={form.container_type}
-                                            label="Container type"
-                                            onChange={event => handleContainerTypeChange(event, index)}
-                                            variant="outlined"
-                                        >
-                                            <MenuItem value="containertype1">PMP</MenuItem>
-                                            <MenuItem value="containertype2">PAG</MenuItem>
-                                            <MenuItem value="containertype3">PAJ</MenuItem>
-                                            <MenuItem value="containertype4">AKE</MenuItem>
-                                            <MenuItem value="containertype5">RKN</MenuItem>
-                                            <MenuItem value="containertype6">AKH</MenuItem>
-                                            <MenuItem value="containertype7">PKC</MenuItem>
-                                            <MenuItem value="containertype8">RAP</MenuItem>
-                                            <MenuItem value="containertype9">BULK</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Box>
-                                <Box sx={{flexGrow: "6", paddingRight: "10px"}}>
-                                    <TextField
-                                        name='config'
-                                        placeholder='config'
-                                        onChange={event => handleConfigChange(event, index)}
-                                        value={form.config}
-                                        type='number'
-                                        min="1"
-                                        sx={{height: "100%", width: "100%"}}
-                                        variant="outlined"
-                                    />
-                                </Box>
-                                <Box sx={{flexGrow: "1"}}>
-                                    <Button sx={{height: "100%", width: "100%"}} variant="contained"
-                                            onClick={() => removeFieldsContainer(index)}>Remove row</Button>
-                                </Box>
-                            </Box>
-                        )
-                    })}
-                    {abwsFields.map((form, index1) => {
-                        return (
-                            <Box className={styles.formBox} key={index1}>
-                                <Box component="form" sx={{'& > :not(style)': {m: 1, width: '25ch'},}}
-                                     noValidate
-                                     autoComplete="off">
-                                    <TextField id="type" label="type" variant="standard"/>
-                                    <TextField id="uld_identifiers" label="uld-identifiers" variant="standard"/>
-                                    <TextField id="priority" label="priority" variant="standard"/>
-                                </Box>
-                                <Box component="form" sx={{'& > :not(style)': {m: 1, width: '25ch'},}}
-                                     noValidate
-                                     autoComplete="off">
-                                    <TextField id="awb_number" label="awb_number" variant="standard"/>
-                                    <TextField id="shc" label="shc" variant="standard"/>
-                                    <TextField id="weight" label="weight" variant="standard"/>
-                                </Box>
-                                <Box component="form" sx={{'& > :not(style)': {m: 1, width: '25ch'},}}
-                                     noValidate
-                                     autoComplete="off">
-                                    <TextField id="volume" label="volume" variant="standard"/>
-                                    <TextField id="dimensions" label="dimensions" variant="standard"/>
-                                </Box>
-                                <Box sx={{flexGrow: "1"}}>
-                                    <Button sx={{height: "100%", width: "100%"}} variant="contained"
-                                            onClick={() => removeFieldsabws(index1)}>Remove row</Button>
-                                </Box>
-                            </Box>
-                        )
-                    })}
-                </form>
-                {(message !== "") ?
-                    <Box component="span" sx={{display: 'block', paddingTop: "10px", paddingBottom: "20px"}}>
-                        {message}</Box> : <Box/>}
-
-                <Box sx={{display: "flex", flexDirection: "row", height: "60px"}}>
-
-                    <Box sx={{flexGrow: "1", paddingRight: "10px"}}>
-                        <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={addFieldsContainer()}>Add
-                            container row</Button>
-
-                        <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={addFieldsAbws()}>Add
-                            abws row</Button>
-                    </Box>
-                    <Box sx={{flexGrow: "7"}}/>
-                    <Box sx={{flexGrow: "1"}}>
-                        <Button sx={{height: "100%", width: "100%"}} variant="contained"
-                                onClick={submit}>Submit</Button>
-                    </Box>
+        <Box>
+            <form>
+                <Box component="form" sx={{'& > :not(style)': {m: 1, width: '25ch'},}}
+                     noValidate
+                     autoComplete="off"
+                >
+                    <TextField id="flight-weight-capacity" label="Flight-Weight-Capacity" variant="standard"/>
                 </Box>
+                {containerFields.map((form, index) => {
+                    return (
+                        <Box className={styles.formBox} key={index}>
+                            <Box sx={{flexGrow: "12", paddingRight: "10px"}}>
+                                <FormControl sx={{height: "100%", width: "100%"}}>
+                                    <InputLabel id="container-type">Container type</InputLabel>
+                                    <Select
+                                        labelId="container-type-label"
+                                        id="container-type-select"
+                                        value={form.container_type}
+                                        label="Container type"
+                                        onChange={event => handleContainerTypeChange(event, index)}
+                                        variant="outlined"
+                                    >
+                                        <MenuItem value="containertype1">PMP</MenuItem>
+                                        <MenuItem value="containertype2">PAG</MenuItem>
+                                        <MenuItem value="containertype3">PAJ</MenuItem>
+                                        <MenuItem value="containertype4">AKE</MenuItem>
+                                        <MenuItem value="containertype5">RKN</MenuItem>
+                                        <MenuItem value="containertype6">AKH</MenuItem>
+                                        <MenuItem value="containertype7">PKC</MenuItem>
+                                        <MenuItem value="containertype8">RAP</MenuItem>
+                                        <MenuItem value="containertype9">BULK</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <Box sx={{flexGrow: "6", paddingRight: "10px"}}>
+                                <TextField
+                                    name='config'
+                                    placeholder='config'
+                                    onChange={event => handleConfigChange(event, index)}
+                                    value={form.config}
+                                    type='number'
+                                    min="1"
+                                    sx={{height: "100%", width: "100%"}}
+                                    variant="outlined"
+                                />
+                            </Box>
+                            <Box sx={{flexGrow: "1"}}>
+                                <Button sx={{height: "100%", width: "100%"}} variant="contained"
+                                        onClick={() => removeFieldsContainer(index)}>Remove row</Button>
+                            </Box>
+                        </Box>
+                    )
+                })}
+                {abwsFields.map((form, index1) => {
+                    return (
+                        <Box className={styles.formBox} key={index1}>
+                            <Box component="form" sx={{'& > :not(style)': {m: 1, width: '25ch'},}}
+                                 noValidate
+                                 autoComplete="off">
+                                <TextField id="type" label="type" variant="standard"/>
+                                <TextField id="uld_identifiers" label="uld-identifiers" variant="standard"/>
+                                <TextField id="priority" label="priority" variant="standard"/>
+                            </Box>
+                            <Box component="form" sx={{'& > :not(style)': {m: 1, width: '25ch'},}}
+                                 noValidate
+                                 autoComplete="off">
+                                <TextField id="awb_number" label="awb_number" variant="standard"/>
+                                <TextField id="shc" label="shc" variant="standard"/>
+                                <TextField id="weight" label="weight" variant="standard"/>
+                            </Box>
+                            <Box component="form" sx={{'& > :not(style)': {m: 1, width: '25ch'},}}
+                                 noValidate
+                                 autoComplete="off">
+                                <TextField id="volume" label="volume" variant="standard"/>
+                                <TextField id="dimensions" label="dimensions" variant="standard"/>
+                            </Box>
+                            <Box sx={{flexGrow: "1"}}>
+                                <Button sx={{height: "100%", width: "100%"}} variant="contained"
+                                        onClick={() => removeFieldsabws(index1)}>Remove row</Button>
+                            </Box>
+                        </Box>
+                    )
+                })}
+            </form>
+            {(message !== "") ?
+                <Box component="span" sx={{display: 'block', paddingTop: "10px", paddingBottom: "20px"}}>
+                    {message}</Box> : <Box/>}
 
+            <Box sx={{display: "flex", flexDirection: "row", height: "60px"}}>
+
+                <Box sx={{flexGrow: "1", paddingRight: "10px"}}>
+                    <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={addFieldsContainer()}>Add
+                        container row</Button>
+
+                    <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={addFieldsAbws()}>Add
+                        abws row</Button>
+                </Box>
+                <Box sx={{flexGrow: "7"}}/>
+                <Box sx={{flexGrow: "1"}}>
+                    <Button sx={{height: "100%", width: "100%"}} variant="contained"
+                            onClick={submit}>Submit</Button>
+                </Box>
             </Box>
-        );
 
-    }
+        </Box>
+    );
+
+}
 
 export default BinPackingForm;
-
