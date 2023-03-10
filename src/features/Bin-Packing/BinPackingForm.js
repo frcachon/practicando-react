@@ -23,14 +23,6 @@ function BinPackingForm() {
         const configIsValid = containerFields.every(item => item.config !== '' &&  item.config > 0)
         const priorityIsValid= abwsFields.every(item => item.priority !== '' && Number(item.priority) > 0)
         const awbNumberIsValid= abwsFields.every(item=> item.awb_number!== '' && Number(item.awb_number) > 0)
-        const uldIdentifiersValid = abwsFields.every(item => {
-            if (item.type === 'BULK' || item.type === 'BUP' || item.uld_identifiers === '') { // should not be passed es que se pasa todo como null?
-                return item.uld_identifiers == '';
-            }});
-        const dimensionsValid = abwsFields.every(item => {
-            if (item.type === 'BUP' || item.type === 'SSPD') {
-                return item.dimensions == '';
-            }});
         const weightIsValid = abwsFields.every(item => item.weight !== '' && typeof Number(item.weight) === 'number' && Number(item.weight) > 0)
         const volumeIsValid = abwsFields.every(item => item.volume !== '' && typeof Number(item.volume) === 'number' && Number(item.volume) > 0)
 
@@ -70,19 +62,24 @@ function BinPackingForm() {
             setMessage("You must submit abws.")
             return;
         }
-        if (uldIdentifiersValid) {
-            setMessage("Uld Identifiers are required for SSPD type only.");
-            return;
-        }
-        if (dimensionsValid) {
-            setMessage("Dimensions are required for BULK or null type only.");
-            return;
-        }
 
         const request = {
             flight: flightWeightCapacity,
             containers: containerFields,
-            abws: abwsFields
+            abws: abwsFields.map((abw) => {
+                if (abw.type === null || abw.type === 'BULK' || abw.type === 'BUP' ) {
+                    // Remove the 'uld_identifiers' property from the object
+                    const { uld_identifiers, ...rest } = abw;
+                    return rest;
+                }if (abw.type === 'BUP' || abw.type === 'SSPD'){
+                    // Remove the 'dimension' property from the object
+                    const { dimensions, ...rest } = abw;
+                    return rest;
+                }
+                else {
+                    return abw;
+                }
+            }),
         }
 
         try {
@@ -128,6 +125,8 @@ function BinPackingForm() {
         setMessage("")
         setabwsFields([...abwsFields, object])
     }
+
+
     const removeFieldsContainer = (index) => {
         let data = [...containerFields];
         data.splice(index, 1)
@@ -147,25 +146,19 @@ function BinPackingForm() {
         setContainerFields(data);
     }
 
-    const handleConfigChange = (event, index) => {
-        let data = [...containerFields];
-        data[index]["weight"] = event.target.value;
-        setContainerFields(data);
-    }
-
     return (
         <Box>
             <form>
-                <Box component="form" sx={{'& > :not(style)': {m: 1, width: '25ch'},}}
+                <Box component="form" sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
                      noValidate
                      autoComplete="off"
                 >
-                    <TextField id="flight-weight-capacity" label="Flight-Weight-Capacity" variant="standard"/>
+                    <TextField id="flight-weight-capacity" label="Flight-Weight-Capacity" variant="standard" />
                 </Box>
                 {containerFields.map((form, index) => {
                     return (
                         <Box className={styles.formBox} key={index}>
-                            <Box sx={{flexGrow: "12", paddingRight: "10px"}}>
+                            <Box sx={ {flexGrow: "12", paddingRight: "10px"} }>
                                 <FormControl sx={{height: "100%", width: "100%"}}>
                                     <InputLabel id="container-type">Container type</InputLabel>
                                     <Select
@@ -188,28 +181,21 @@ function BinPackingForm() {
                                     </Select>
                                 </FormControl>
                             </Box>
-                            <Box sx={{flexGrow: "6", paddingRight: "10px"}}>
-                                <TextField
-                                    name='config'
-                                    placeholder='config'
-                                    onChange={event => handleConfigChange(event, index)}
-                                    value={form.config}
-                                    type='number'
-                                    min="1"
-                                    sx={{height: "100%", width: "100%"}}
-                                    variant="outlined"
-                                />
+                            <Box component="form" sx={{'& > :not(style)': {m: 1, width: '25ch'},}}
+                                 noValidate
+                                 autoComplete="off">
+                                <TextField id="config" label="type" variant="standard"/>
                             </Box>
-                            <Box sx={{flexGrow: "1"}}>
+                            <Box sx={ {flexGrow: "1"} } >
                                 <Button sx={{height: "100%", width: "100%"}} variant="contained"
                                         onClick={() => removeFieldsContainer(index)}>Remove row</Button>
                             </Box>
                         </Box>
                     )
                 })}
-                {abwsFields.map((form, index1) => {
+                {abwsFields.map((form, index) => {
                     return (
-                        <Box className={styles.formBox} key={index1}>
+                        <Box className={styles.formBox}  key={index}>
                             <Box component="form" sx={{'& > :not(style)': {m: 1, width: '25ch'},}}
                                  noValidate
                                  autoComplete="off">
@@ -232,29 +218,24 @@ function BinPackingForm() {
                             </Box>
                             <Box sx={{flexGrow: "1"}}>
                                 <Button sx={{height: "100%", width: "100%"}} variant="contained"
-                                        onClick={() => removeFieldsabws(index1)}>Remove row</Button>
+                                        onClick={() => removeFieldsabws(index)}>Remove row</Button>
                             </Box>
                         </Box>
                     )
                 })}
             </form>
-            {(message !== "") ?
-                <Box component="span" sx={{display: 'block', paddingTop: "10px", paddingBottom: "20px"}}>
-                    {message}</Box> : <Box/>}
 
-            <Box sx={{display: "flex", flexDirection: "row", height: "60px"}}>
-
+            <Box sx={{display: "flex", flexDirection: "row", height: "60px", marginBottom: "10px" }}>
                 <Box sx={{flexGrow: "1", paddingRight: "10px"}}>
-                    <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={addFieldsContainer()}>Add
-                        container row</Button>
-
-                    <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={addFieldsAbws()}>Add
-                        abws row</Button>
+                    <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={addFieldsContainer}>Add container row</Button>
+                </Box>
+                <Box sx={{flexGrow: "7"}}/>
+                <Box sx={{flexGrow: "1", paddingRight: "10px", marginLeft: "10px"}}>
+                    <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={addFieldsAbws}>Add abws row</Button>
                 </Box>
                 <Box sx={{flexGrow: "7"}}/>
                 <Box sx={{flexGrow: "1"}}>
-                    <Button sx={{height: "100%", width: "100%"}} variant="contained"
-                            onClick={submit}>Submit</Button>
+                    <Button sx={{height: "100%", width: "100%"}} variant="contained" onClick={submit}>Submit</Button>
                 </Box>
             </Box>
 
