@@ -3,6 +3,7 @@ import {Box, Typography} from "@mui/material";
 import Counter from "../counter/Counter.js";
 import axios from "axios";
 import {useQuery} from "react-query";
+import { Hola1, Hola2 } from "./Hola.css"
 
 const Hola = () => {
 
@@ -23,20 +24,18 @@ const Hola = () => {
         const {isLoading, data} = useGetContainers()
         if (isLoading) {
             return (
-                <Typography>Loading...</Typography>
+                <Typography className="Hola1" >Loading...</Typography>
             );
         } else {
             return (
-                <Box>
-                    <Typography>Fetched data</Typography>
-                </Box>
+                    <Typography className="Hola2" >Fetched data</Typography>
             );
         }
     }
 
     return (
         <Box>
-            <Counter/>
+            <Counter  />
             <ContainersList/>
         </Box>
     );
